@@ -18,4 +18,61 @@ public class TriangleTests {
         var result = t.trArea();
         Assertions.assertEquals(6, result);
     }
+
+    @Test
+    void cannotCreateTriangleWithNegativeSideA() {
+        try {
+            new Triangle(-2, 3, 4);
+            Assertions.fail();
+        } catch (IllegalArgumentException exception) {
+            //ok
+        }
+    }
+
+    @Test
+    void cannotCreateTriangleWithNegativeSideB() {
+        try {
+            new Triangle(2, -3, 4);
+            Assertions.fail();
+        } catch (IllegalArgumentException exception) {
+            //ok
+        }
+    }
+
+    @Test
+    void cannotCreateTriangleWithNegativeSideC() {
+        try {
+            new Triangle(2, 3, -4);
+            Assertions.fail();
+        } catch (IllegalArgumentException exception) {
+            //ok
+        }
+    }
+    @Test
+    void cannotCreateWrongTrianglesideA() {
+        try {
+            new Triangle(6, 3, 2);
+            Assertions.fail();
+        } catch (IllegalArgumentException exception) {
+            //ok
+        }
+    }
+    @Test
+    void cannotCreateWrongTrianglesideB() {
+        try {
+            new Triangle(2, 8, 3);
+            Assertions.fail();
+        } catch (IllegalArgumentException exception) {
+            //ok
+        }
+    }
+    @Test
+    void cannotCreateWrongTrianglesideC() {
+        try {
+            new Triangle(2, 4, 10);
+            Assertions.fail();
+        } catch (IllegalArgumentException exception) {
+            //ok
+        }
+    }
 }
