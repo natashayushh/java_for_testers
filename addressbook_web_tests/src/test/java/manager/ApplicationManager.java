@@ -11,18 +11,20 @@ public class ApplicationManager {
     protected static WebDriver driver;
     private LoginHelper session;
     private GroupHelper groups;
+    private ContactHelper contacts;
+
     public void init(String browser) {
         if (driver == null) {
             if ("chrome".equals(browser)) {
                 driver = new ChromeDriver();
             } else if ("firefox".equals(browser)) {
-                    driver = new FirefoxDriver();
+                driver = new FirefoxDriver();
             } else {
                 throw new IllegalArgumentException(String.format("Unknown browser %s", browser));
             }
-        Runtime.getRuntime().addShutdownHook(new Thread(driver::quit));
-        driver.get("http://localhost/addressbook/index.php");
-        driver.manage().window().setSize(new Dimension(1280, 712));
+            Runtime.getRuntime().addShutdownHook(new Thread(driver::quit));
+            driver.get("http://localhost/addressbook/index.php");
+            driver.manage().window().setSize(new Dimension(1280, 712));
             session().login("admin", "secret");
         }
     }
@@ -39,6 +41,13 @@ public class ApplicationManager {
             groups = new GroupHelper(this);
         }
         return groups;
+    }
+
+    public ContactHelper contacts() {
+        if (contacts == null) {
+            contacts = new ContactHelper(this);
+        }
+        return contacts;
     }
 
     public boolean isElementPresent(By locator) {
