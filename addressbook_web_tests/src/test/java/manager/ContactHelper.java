@@ -1,7 +1,12 @@
 package manager;
 
 import model.ContactData;
+import model.GroupData;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ContactHelper extends HelperBase {
     public ContactHelper(ApplicationManager manager) {
@@ -19,10 +24,21 @@ public class ContactHelper extends HelperBase {
         submitContactCreation();
         returnToHomePage();
     }
-
-    public void removeContact() {
+    public void modifyContact(ContactData contact, ContactData modifiedContact) {
         returnToHomePage();
-        selectContact();
+        selectContact(contact);
+        initContactModification();
+        fillContactForm(modifiedContact);
+        submitContactModification();
+        returnToHomePage();
+    }
+    private void initContactModification() { click(By.xpath("//img[@alt='Edit']")); }
+    private void submitContactModification() {
+        click(By.name("update"));
+    }
+    public void removeContact(ContactData contact) {
+        returnToHomePage();
+        selectContact(contact);
         removeSelectedContacts();
         returnToHomePage();
     }
@@ -49,8 +65,9 @@ public class ContactHelper extends HelperBase {
         type(By.name("mobile"), contact.mobile());
     }
 
-    private void selectContact() {
-        click(By.name("selected[]"));
+    private void selectContact(ContactData contact) {
+        //click(By.cssSelector(String.format("input[value='%s']", contact.id())));
+        click(By.xpath("//input[@id='MassCB']"));
     }
 
     public int getCount() {
@@ -65,4 +82,21 @@ public class ContactHelper extends HelperBase {
     }
 
     private void selectAllContacts() {click(By.xpath("//input[@id='MassCB']"));}
+
+    public List<ContactData> getList() {
+        returnToHomePage();
+        var contacts = new ArrayList<ContactData>();
+        var trline = manager.driver.findElements(By.name("entry"));
+        for (var tr : trline) {
+            var cell = tr.findElements(By.tagName("td"));
+            var lastname = cell.get(1).getText();
+            var firstname = cell.get(2).getText();
+            var idreal = cell.get(0);
+            var checkbox = idreal.findElement(By.name("selected[]"));
+            var id = checkbox.getAttribute("value");
+            contacts.add(new ContactData().withId(id).withFirstName(firstname).withLastName(lastname));
+        }
+        return contacts;
+    }
+
 }
