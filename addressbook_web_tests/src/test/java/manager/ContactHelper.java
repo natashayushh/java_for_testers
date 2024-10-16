@@ -1,9 +1,7 @@
 package manager;
 
 import model.ContactData;
-import model.GroupData;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,12 +25,17 @@ public class ContactHelper extends HelperBase {
     public void modifyContact(ContactData contact, ContactData modifiedContact) {
         returnToHomePage();
         selectContact(contact);
-        initContactModification();
+        initContactModification(contact);
         fillContactForm(modifiedContact);
         submitContactModification();
         returnToHomePage();
     }
-    private void initContactModification() { click(By.xpath("//img[@alt='Edit']")); }
+    private void initContactModification(ContactData contact)
+    {
+        click(By.cssSelector(String.format("a[href=\"edit.php?id=%s\"]", contact.id())));
+
+    }
+
     private void submitContactModification() {
         click(By.name("update"));
     }
@@ -66,8 +69,7 @@ public class ContactHelper extends HelperBase {
     }
 
     private void selectContact(ContactData contact) {
-        //click(By.cssSelector(String.format("input[value='%s']", contact.id())));
-        click(By.xpath("//input[@id='MassCB']"));
+        click(By.cssSelector(String.format("input[value='%s']", contact.id())));
     }
 
     public int getCount() {
@@ -81,14 +83,15 @@ public class ContactHelper extends HelperBase {
         removeSelectedContacts();
     }
 
-    private void selectAllContacts() {click(By.xpath("//input[@id='MassCB']"));}
+    private void selectAllContacts() {
+        click(By.xpath("//input[@id='MassCB']"));}
 
     public List<ContactData> getList() {
         returnToHomePage();
         var contacts = new ArrayList<ContactData>();
         var trline = manager.driver.findElements(By.name("entry"));
         for (var tr : trline) {
-            var cell = tr.findElements(By.tagName("td"));
+            var cell = tr.findElements(By.cssSelector("td"));
             var lastname = cell.get(1).getText();
             var firstname = cell.get(2).getText();
             var idreal = cell.get(0);
