@@ -18,32 +18,24 @@ public class ContactCreationTests extends TestBase {
 
     public static List<ContactData> contactProvider() throws IOException {
         var result = new ArrayList<ContactData>();
-/*        for (var firstname : List.of("","First name test")) {
-            for (var lastname : List.of("", "Last name test")) {
-                    result.add(new ContactData().withFirstName(firstname).withLastName(lastname));
-                }
-            }*/
         var json = Files.readString(Paths.get("contacts.json"));
         ObjectMapper mapper = new ObjectMapper();
         var value = mapper.readValue(json, new TypeReference<List<ContactData>>() {});
         result.addAll(value);
-/*        for (int i = 0; i < 5; i++ ) {
-            result.add(new ContactData().withFirstName(CommonFunctions.randomString(i * 10))
-                    .withLastName(CommonFunctions.randomString(i * 10)));
-        }*/
         return result;
     }
     @ParameterizedTest
     @MethodSource("contactProvider")
     public void CanCreateMultipleContact(ContactData contact) {
-        var oldContacts = app.contacts().getList();
+        var oldContacts = app.hbm().getContactList();
         app.contacts().createContact(contact);
-        var newContacts = app.contacts().getList();
+        var newContacts = app.hbm().getContactList();
         Comparator<ContactData> compareById = (o1, o2) -> {
             return Integer.compare(Integer.parseInt(o1.id()), Integer.parseInt(o2.id()));};
         newContacts.sort(compareById);
+        var maxId = newContacts.get(newContacts.size() - 1).id();
         var expectedList = new ArrayList<>(oldContacts);
-        expectedList.add(contact.withId(newContacts.get(newContacts.size() - 1).id()).withFirstName(contact.firstname()).withLastName(contact.lastname()));
+        expectedList.add(contact.withId(maxId));
         expectedList.sort(compareById);
         Assertions.assertEquals(newContacts, expectedList);
     }
@@ -56,9 +48,9 @@ public class ContactCreationTests extends TestBase {
     @ParameterizedTest
     @MethodSource("negativeContactProvider")
     public void CannotCreateContact(ContactData contact) {
-        var oldContacts = app.contacts().getList();
+        var oldContacts = app.hbm().getContactList();
         app.contacts().createContact(contact);
-        var newContacts = app.contacts().getList();
+        var newContacts = app.hbm().getContactList();
         Assertions.assertEquals(newContacts, oldContacts);
     }
 }
