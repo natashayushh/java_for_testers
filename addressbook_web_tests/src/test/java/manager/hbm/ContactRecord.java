@@ -21,6 +21,7 @@ public class ContactRecord {
 
     public Date deprecated = new Date();
 
+
     public ContactRecord(int id, String firstname, String lastname) {
         this.id = id;
         this.firstname = firstname;

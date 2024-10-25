@@ -1,7 +1,9 @@
 package manager;
 
 import model.ContactData;
+import model.GroupData;
 import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.Select;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,13 +17,30 @@ public class ContactHelper extends HelperBase {
         click(By.linkText("add new"));
     }
 
-    public void createContact(ContactData contact) {
+    public void create(ContactData contact) {
         openContactsPage();
         initContactCreation();
         fillContactForm(contact);
         submitContactCreation();
         returnToHomePage();
     }
+
+    public void create(ContactData contact, GroupData group) {
+        openContactsPage();
+        initContactCreation();
+        fillContactForm(contact);
+        selectGroup(group);
+        submitContactCreation();
+        returnToHomePage();
+    }
+
+    private void selectGroup(GroupData group) {
+        new Select(manager.driver.findElement(By.name("new_group"))).selectByValue(group.id());
+    }
+    private void selectGroupAtHomepage(GroupData group) {
+        new Select(manager.driver.findElement(By.name("to_group"))).selectByValue(group.id());
+    }
+
     public void modifyContact(ContactData contact, ContactData modifiedContact) {
         returnToHomePage();
         selectContact(contact);
@@ -30,15 +49,15 @@ public class ContactHelper extends HelperBase {
         submitContactModification();
         returnToHomePage();
     }
-    private void initContactModification(ContactData contact)
-    {
-        click(By.cssSelector(String.format("a[href=\"edit.php?id=%s\"]", contact.id())));
 
+    private void initContactModification(ContactData contact) {
+        click(By.cssSelector(String.format("a[href=\"edit.php?id=%s\"]", contact.id())));
     }
 
     private void submitContactModification() {
         click(By.name("update"));
     }
+
     public void removeContact(ContactData contact) {
         returnToHomePage();
         selectContact(contact);
@@ -84,7 +103,27 @@ public class ContactHelper extends HelperBase {
     }
 
     private void selectAllContacts() {
-        click(By.xpath("//input[@id='MassCB']"));}
+        click(By.xpath("//input[@id='MassCB']"));
+    }
+
+    public void addContactToGroup(ContactData contact, GroupData group) {
+        returnToHomePage();
+        selectContact(contact);
+        selectGroupAtHomepage(group);
+        click(By.xpath("//input[@name='add']"));
+        returnToHomePage();
+    }
+
+    public void removeContactFromGroup(ContactData contact, GroupData group) {
+        returnToHomePage();
+        selectGroupToRemoveContact(group);
+        selectContact(contact);
+        click(By.xpath("//input[@name='remove']"));
+        returnToHomePage();
+    }
+    private void selectGroupToRemoveContact(GroupData group) {
+        new Select(manager.driver.findElement(By.name("group"))).selectByValue(group.id());
+    }
 
     public List<ContactData> getList() {
         returnToHomePage();

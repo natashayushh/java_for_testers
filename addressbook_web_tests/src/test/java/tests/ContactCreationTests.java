@@ -2,8 +2,11 @@ package tests;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import common.CommonFunctions;
 import model.ContactData;
+import model.GroupData;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -20,18 +23,21 @@ public class ContactCreationTests extends TestBase {
         var result = new ArrayList<ContactData>();
         var json = Files.readString(Paths.get("contacts.json"));
         ObjectMapper mapper = new ObjectMapper();
-        var value = mapper.readValue(json, new TypeReference<List<ContactData>>() {});
+        var value = mapper.readValue(json, new TypeReference<List<ContactData>>() {
+        });
         result.addAll(value);
         return result;
     }
+
     @ParameterizedTest
     @MethodSource("contactProvider")
-    public void CanCreateMultipleContact(ContactData contact) {
+    public void CanCreateContact(ContactData contact) {
         var oldContacts = app.hbm().getContactList();
-        app.contacts().createContact(contact);
+        app.contacts().create(contact);
         var newContacts = app.hbm().getContactList();
         Comparator<ContactData> compareById = (o1, o2) -> {
-            return Integer.compare(Integer.parseInt(o1.id()), Integer.parseInt(o2.id()));};
+            return Integer.compare(Integer.parseInt(o1.id()), Integer.parseInt(o2.id()));
+        };
         newContacts.sort(compareById);
         var maxId = newContacts.get(newContacts.size() - 1).id();
         var expectedList = new ArrayList<>(oldContacts);
@@ -40,16 +46,33 @@ public class ContactCreationTests extends TestBase {
         Assertions.assertEquals(newContacts, expectedList);
     }
 
+    @Test
+    public void CanCreateContactInGroup() {
+        var contact = new ContactData()
+                .withFirstName(CommonFunctions.randomString(10))
+                .withLastName(CommonFunctions.randomString(10));
+        if (app.hbm().getGroupCount() == 0) {
+            app.hbm().createGroup(new GroupData("", "Group name", "Group header", "Group footer"));
+        }
+        var group = app.hbm().getGroupList().get(0);
+        var oldRelated = app.hbm().getContactsInGroup(group);
+        app.contacts().create(contact, group);
+        var newRelated = app.hbm().getContactsInGroup(group);
+        Assertions.assertEquals(oldRelated.size() + 1, newRelated.size());
+
+    }
+
     public static List<ContactData> negativeContactProvider() {
         var result = new ArrayList<ContactData>(List.of(
                 new ContactData("", "first name'", "", "")));
         return result;
     }
+
     @ParameterizedTest
     @MethodSource("negativeContactProvider")
     public void CannotCreateContact(ContactData contact) {
         var oldContacts = app.hbm().getContactList();
-        app.contacts().createContact(contact);
+        app.contacts().create(contact);
         var newContacts = app.hbm().getContactList();
         Assertions.assertEquals(newContacts, oldContacts);
     }
