@@ -12,7 +12,7 @@ public class ContactDeleteTests extends TestBase {
     @Test
     public void CanDeleteContact() {
         if (app.contacts().getCount() == 0) {
-            app.contacts().create(new ContactData("", "First name", "Last name", ""));
+            app.contacts().createContact(new ContactData("", "First name", "Last name", ""));
         }
         var oldContacts = app.hbm().getContactList();
         var rnd = new Random();

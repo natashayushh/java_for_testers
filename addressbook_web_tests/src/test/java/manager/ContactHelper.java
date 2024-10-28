@@ -17,7 +17,7 @@ public class ContactHelper extends HelperBase {
         click(By.linkText("add new"));
     }
 
-    public void create(ContactData contact) {
+    public void createContact(ContactData contact) {
         openContactsPage();
         initContactCreation();
         fillContactForm(contact);
@@ -25,7 +25,7 @@ public class ContactHelper extends HelperBase {
         returnToHomePage();
     }
 
-    public void create(ContactData contact, GroupData group) {
+    public void createContactInGroup(ContactData contact, GroupData group) {
         openContactsPage();
         initContactCreation();
         fillContactForm(contact);

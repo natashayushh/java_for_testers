@@ -33,7 +33,7 @@ public class ContactCreationTests extends TestBase {
     @MethodSource("contactProvider")
     public void CanCreateContact(ContactData contact) {
         var oldContacts = app.hbm().getContactList();
-        app.contacts().create(contact);
+        app.contacts().createContact(contact);
         var newContacts = app.hbm().getContactList();
         Comparator<ContactData> compareById = (o1, o2) -> {
             return Integer.compare(Integer.parseInt(o1.id()), Integer.parseInt(o2.id()));
@@ -56,7 +56,7 @@ public class ContactCreationTests extends TestBase {
         }
         var group = app.hbm().getGroupList().get(0);
         var oldRelated = app.hbm().getContactsInGroup(group);
-        app.contacts().create(contact, group);
+        app.contacts().createContactInGroup(contact, group);
         var newRelated = app.hbm().getContactsInGroup(group);
         Assertions.assertEquals(oldRelated.size() + 1, newRelated.size());
 
@@ -72,7 +72,7 @@ public class ContactCreationTests extends TestBase {
     @MethodSource("negativeContactProvider")
     public void CannotCreateContact(ContactData contact) {
         var oldContacts = app.hbm().getContactList();
-        app.contacts().create(contact);
+        app.contacts().createContact(contact);
         var newContacts = app.hbm().getContactList();
         Assertions.assertEquals(newContacts, oldContacts);
     }
