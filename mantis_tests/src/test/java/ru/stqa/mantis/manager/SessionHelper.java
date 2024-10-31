@@ -17,4 +17,24 @@ public class SessionHelper extends HelperBase{
     public boolean isLoggedIn() {
         return isElementPresent(By.cssSelector("span.user-info"));
     }
+
+    //регистрация нового пользователя
+    public void logInToCreatedAccount(String user, String email) {
+        click(By.linkText("Signup for a new account"));
+        type(By.name("username"), user);
+        type(By.name("email"), email);
+        click(By.cssSelector("input[type='submit']"));
+        click(By.linkText("Proceed"));
+    }
+    public void openPage(String url) {
+        manager.driver().get(url);
+    }
+
+    public void endOfRegistration (String user, String password) {
+        type(By.name("realname"), user);
+        type(By.name("password"), password);
+        type(By.name("password_confirm"), password);
+        click(By.xpath("//button[@type='submit']"));
+
+    }
 }
