@@ -36,7 +36,7 @@ public class ContactModificationTests extends TestBase {
             app.contacts().createContact(new ContactData()
                     .withFirstName(CommonFunctions.randomString(10))
                     .withLastName(CommonFunctions.randomString(10)));
-        } else if (app.hbm().getGroupCount() == 0) {
+        } if (app.hbm().getGroupCount() == 0) {
             app.hbm().createGroup(new GroupData()
                     .withHeader(CommonFunctions.randomString(10))
                     .withFooter(CommonFunctions.randomString(10)));
@@ -62,6 +62,7 @@ public class ContactModificationTests extends TestBase {
                 var group = app.hbm().getGroupList().get(0);
                 app.contacts().createContactInGroup(contact, group);
             }
+        }
             var group = app.hbm().getGroupList().get(0);
             var oldRelated = app.hbm().getContactsInGroup(group);
             var rnd = new Random();
@@ -72,6 +73,5 @@ public class ContactModificationTests extends TestBase {
             var expectedList = new ArrayList<>(oldRelated);
             expectedList.remove(index);
             Assertions.assertEquals(newRelated, expectedList);
-        }
     }
 }
