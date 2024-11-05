@@ -43,6 +43,9 @@ public class ContactModificationTests extends TestBase {
         }
         var contact = app.hbm().getContactList().get(0);
         var group = app.hbm().getGroupList().get(0);
+        if (app.hbm().getContactsInGroup(group).contains(contact)) {
+            app.contacts().removeContactFromGroup(contact, group);
+        }
         var oldRelated = app.hbm().getContactsInGroup(group);
         app.contacts().addContactToGroup(contact, group);
         var newRelated = app.hbm().getContactsInGroup(group);
