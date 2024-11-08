@@ -51,6 +51,7 @@ public class ContactModificationTests extends TestBase {
         app.contacts().addContactToGroup(contact, group);
         var newRelated = app.hbm().getContactsInGroup(group);
         Assertions.assertEquals(oldRelated.size() + 1, newRelated.size());
+        app.contacts().removeContactFromGroup(contact, group);
     }
 
     @Test

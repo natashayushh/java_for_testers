@@ -19,7 +19,7 @@ import java.util.Set;
 
 public class ContactCreationTests extends TestBase {
 
-    public static List<ContactData> contactProvider() throws IOException {
+/*    public static List<ContactData> contactProvider() throws IOException {
         var result = new ArrayList<ContactData>();
         var json = Files.readString(Paths.get("contacts.json"));
         ObjectMapper mapper = new ObjectMapper();
@@ -27,8 +27,13 @@ public class ContactCreationTests extends TestBase {
         });
         result.addAll(value);
         return result;
+    }*/
+    public static List<ContactData> contactProvider() throws IOException {
+        return List.of(new ContactData()
+                .withFirstName(CommonFunctions.randomString(10))
+                .withLastName(CommonFunctions.randomString(20))
+                .withAddress(CommonFunctions.randomString(30)));
     }
-
     @ParameterizedTest
     @MethodSource("contactProvider")
     public void CanCreateContact(ContactData contact) {
