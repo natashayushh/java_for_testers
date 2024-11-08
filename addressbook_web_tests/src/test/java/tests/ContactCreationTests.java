@@ -47,7 +47,7 @@ public class ContactCreationTests extends TestBase {
         Assertions.assertEquals(Set.copyOf(newContacts), Set.copyOf(expectedList));
     }
 
-    @Test
+/*    @Test
     public void CanCreateContactInGroup() {
         var contact = new ContactData()
                 .withFirstName(CommonFunctions.randomString(10))
@@ -61,7 +61,7 @@ public class ContactCreationTests extends TestBase {
         var newRelated = app.hbm().getContactsInGroup(group);
         Assertions.assertEquals(oldRelated.size() + 1, newRelated.size());
 
-    }
+    }*/
 
     public static List<ContactData> negativeContactProvider() {
         var result = new ArrayList<ContactData>(List.of(

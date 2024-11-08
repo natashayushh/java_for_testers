@@ -72,7 +72,6 @@ public class ContactModificationTests extends TestBase {
             var oldRelated = app.hbm().getContactsInGroup(group);
             var rnd = new Random();
             var index = rnd.nextInt(oldRelated.size());
-
             app.contacts().removeContactFromGroup(oldRelated.get(index), group);
             var newRelated = app.hbm().getContactsInGroup(group);
             var expectedList = new ArrayList<>(oldRelated);

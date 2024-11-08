@@ -1,5 +1,6 @@
 package manager;
 
+import io.qameta.allure.Step;
 import model.GroupData;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -19,7 +20,7 @@ public class GroupHelper extends HelperBase {
             click(By.linkText("groups"));
         }
     }
-
+    @Step
     public void createGroup(GroupData group) {
         openGroupsPage();
         initGroupCreation();
@@ -27,6 +28,7 @@ public class GroupHelper extends HelperBase {
         submitGroupCreation();
         returnToGroupsPage();
     }
+    @Step
     public void removeGroup(GroupData group) {
         openGroupsPage();
         selectGroup(group);
