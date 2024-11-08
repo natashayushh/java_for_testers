@@ -59,16 +59,17 @@ public class ContactModificationTests extends TestBase {
         if (app.contacts().getCount() == 0) {
             var contact = (new ContactData()
                     .withFirstName(CommonFunctions.randomString(10))
-                    .withLastName(CommonFunctions.randomString(10)));
-            if (app.hbm().getGroupCount() == 0) {
+                    .withLastName(CommonFunctions.randomString(10)));}
+        if (app.hbm().getGroupCount() == 0) {
                 app.hbm().createGroup(new GroupData()
                         .withHeader(CommonFunctions.randomString(10))
-                        .withFooter(CommonFunctions.randomString(10)));
-                var group = app.hbm().getGroupList().get(0);
-                app.contacts().createContactInGroup(contact, group);
-            }
+                        .withFooter(CommonFunctions.randomString(10)));}
+        var contact = app.hbm().getContactList().get(0);
+        var group = app.hbm().getGroupList().get(0);
+        if (!app.hbm().getContactsInGroup(group).contains(contact)) {
+            app.contacts().addContactToGroup(contact, group);
         }
-            var group = app.hbm().getGroupList().get(0);
+            //var group = app.hbm().getGroupList().get(0);
             var oldRelated = app.hbm().getContactsInGroup(group);
             var rnd = new Random();
             var index = rnd.nextInt(oldRelated.size());
