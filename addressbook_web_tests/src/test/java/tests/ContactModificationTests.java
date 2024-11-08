@@ -38,6 +38,7 @@ public class ContactModificationTests extends TestBase {
                     .withLastName(CommonFunctions.randomString(10)));
         } if (app.hbm().getGroupCount() == 0) {
             app.hbm().createGroup(new GroupData()
+                    .withName(CommonFunctions.randomString(10))
                     .withHeader(CommonFunctions.randomString(10))
                     .withFooter(CommonFunctions.randomString(10)));
         }
